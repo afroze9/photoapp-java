@@ -1,6 +1,9 @@
 server:
   port: 8082
 
+token:
+  secret: cUQNOIVMSBIR0o1AgypHXGAPICAFIRmQbHwoVQUZjhs=
+
 spring:
   application:
     name: api-gateway
@@ -18,8 +21,11 @@ spring:
           predicates:
             - Path=/users/status/check
             - Method=GET
+            - Header=Authorization, Bearer (.*)
           filters:
             - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+
         - id: users-create
           uri: lb://users-ws
           predicates:
@@ -27,6 +33,7 @@ spring:
             - Method=GET,POST
           filters:
             - RemoveRequestHeader=Cookie
+
         - id: users-authenticate
           uri: lb://users-ws
           predicates:
@@ -34,13 +41,26 @@ spring:
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookie
+
+        - id: users-ops
+          uri: lb://users-ws
+          predicates:
+            - Path=/users/**
+            - Method=GET,POST,UPDATE,DELETE
+            - Header=Authorization, Bearer (.*)
+          filters:
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
+
         - id: demo-status
           uri: lb://users-ws
           predicates:
             - Path=/demo/status
             - Method=GET,POST
+            - Header=Authorization, Bearer (.*)
           filters:
             - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
 
 
 eureka:
