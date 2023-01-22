@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFilter;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
@@ -34,10 +34,10 @@ public class WebSecurity {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-//        authenticationManagerBuilder.userDetailsService(usersService).passwordEncoder(bCryptPasswordEncoder);
-//
-//        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(usersService).passwordEncoder(bCryptPasswordEncoder);
+
+        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
         http
                 .csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()).disable())
@@ -46,9 +46,26 @@ public class WebSecurity {
                         .requestMatchers("/users/**").permitAll())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(toH2Console()).permitAll())
-                .headers().frameOptions(options -> options.disable());
+                .headers().frameOptions(options -> options.disable())
+                .and().addFilter(getAuthenticationFilter(authenticationManager));
 
         return http.build();
+    }
+
+//    @Bean
+//    void registerProvider(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(usersService).passwordEncoder(bCryptPasswordEncoder);
+//    }
+//
+//    @Bean
+//    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+//        return authenticationConfiguration.getAuthenticationManager();
+//    }
+
+    private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) {
+        AuthenticationFilter filter = new AuthenticationFilter();
+        filter.setAuthenticationManager(authenticationManager);
+        return filter;
     }
 
 //    @Bean

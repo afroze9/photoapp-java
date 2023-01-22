@@ -6,11 +6,13 @@ import com.afroze.photoapp.api.users.shared.UserDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Service
@@ -43,6 +45,19 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        UserEntity user = usersRepository.findByEmail(username);
+
+        if(user == null) {
+            throw new UsernameNotFoundException(username);
+        }
+
+        return new User(
+                user.getEmail(),
+                user.getEncryptedPassword(),
+                true,
+                true,
+                true,
+                true,
+                new ArrayList<>());
     }
 }
