@@ -1,8 +1,10 @@
 server:
   port: 8082
 
+
 token:
   secret: cUQNOIVMSBIR0o1AgypHXGAPICAFIRmQbHwoVQUZjhs=
+
 
 spring:
   application:
