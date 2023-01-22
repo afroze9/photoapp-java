@@ -27,6 +27,20 @@ spring:
             - Method=GET,POST
           filters:
             - RemoveRequestHeader=Cookie
+        - id: users-authenticate
+          uri: lb://users-ws
+          predicates:
+            - Path=/users/authenticate
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+        - id: demo-status
+          uri: lb://users-ws
+          predicates:
+            - Path=/demo/status
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
 
 
 eureka:

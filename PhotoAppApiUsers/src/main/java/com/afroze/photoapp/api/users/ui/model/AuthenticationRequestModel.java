@@ -1,6 +1,6 @@
 package com.afroze.photoapp.api.users.ui.model;
 
-public class LoginRequestModel {
+public class AuthenticationRequestModel {
     private String email;
     private String password;
 
