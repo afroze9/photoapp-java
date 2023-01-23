@@ -1,7 +1,7 @@
 package com.afroze.photoapp.api.users.data;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UsersRepository extends CrudRepository<UserEntity, Long> {
+public interface UsersRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByEmail(String email);
 }

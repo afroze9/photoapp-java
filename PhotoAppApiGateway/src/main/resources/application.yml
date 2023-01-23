@@ -46,6 +46,14 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
 
+        - id: users-actuator
+          uri: lb://users-ws
+          predicates:
+            - Path=/actuator/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+
         - id: users-ops
           uri: lb://users-ws
           predicates:
@@ -56,15 +64,13 @@ spring:
             - RemoveRequestHeader=Cookie
             - AuthorizationHeaderFilter
 
-        - id: demo-status
-          uri: lb://users-ws
+        - id: actuator
+          uri: lb://actuator
           predicates:
-            - Path=/demo/status
-            - Method=GET,POST
-            - Header=Authorization, Bearer (.*)
+            - Path=/actuator/**
+            - Method=GET
           filters:
             - RemoveRequestHeader=Cookie
-            - AuthorizationHeaderFilter
 
   rabbitmq:
     host: localhost
@@ -76,3 +82,16 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8010/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans,health,httptrace,info,metrics
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+        security: DEBUG

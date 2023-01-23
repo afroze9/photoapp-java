@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,7 +23,7 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity()
 public class WebSecurity {
 
     private final UsersService usersService;
@@ -29,7 +31,7 @@ public class WebSecurity {
     private final Filter authenticationFilter;
 
     @Autowired
-    public WebSecurity(UsersService usersService, BCryptPasswordEncoder bCryptPasswordEncoder, AuthenticationConfiguration authConfiguration, Filter authenticationFilter) {
+    public WebSecurity(UsersService usersService, BCryptPasswordEncoder bCryptPasswordEncoder, Filter authenticationFilter) {
         this.usersService = usersService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.authenticationFilter = authenticationFilter;
@@ -39,14 +41,14 @@ public class WebSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()).disable())
-                .cors(cors -> cors.disable())
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users/**").permitAll())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/demo/**").authenticated())
+                        .requestMatchers("/actuator/**").permitAll())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(toH2Console()).permitAll())
-                .headers().frameOptions(options -> options.disable())
+                .headers().frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

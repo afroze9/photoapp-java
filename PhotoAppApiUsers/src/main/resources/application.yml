@@ -10,10 +10,11 @@ spring:
     name: users-ws
   config:
     import: optional:configserver:http://localhost:8012
-    name: config-server
+    name: users-ws
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/photo_app
+    username: developer
+    password: dev123
   devtools:
     restart:
       enabled: true
@@ -23,7 +24,15 @@ spring:
       settings:
         web-allow-others: true
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
   rabbitmq:
     host: localhost
     port: 5672
@@ -37,6 +46,12 @@ eureka:
   instance:
     hostname: localhost
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans,health,httptrace,info,metrics
 
 logging:
   level:
