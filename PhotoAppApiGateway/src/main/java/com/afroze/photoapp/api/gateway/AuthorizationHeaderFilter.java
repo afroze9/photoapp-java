@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Component
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
@@ -37,7 +39,13 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                 return onError(exchange, "No Authorization Header", HttpStatus.UNAUTHORIZED);
             }
 
-            final String jwtToken = request.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0).substring(7);
+            final List<String> authHeaders = request.getHeaders().get(HttpHeaders.AUTHORIZATION);
+
+            if(authHeaders == null || authHeaders.isEmpty()) {
+                return onError(exchange, "Undefined state", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            final String jwtToken = authHeaders.get(0).substring(7);
 
             if(!isJwtValid(jwtToken)) {
                 return onError(exchange, "JWT Token is not valid", HttpStatus.UNAUTHORIZED);
@@ -56,12 +64,16 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     // TODO: Move to common
     public Boolean isJwtValid(String token) {
         JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(environment.getProperty("token.secret")).build();
-        String subject = jwtParser.parseClaimsJws(token).getBody().getSubject();
-
-        if(subject == null || subject.isEmpty()) {
+        String subject;
+        try {
+            subject = jwtParser
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (Exception e) {
             return false;
         }
 
-        return true;
+        return subject != null && !subject.isEmpty();
     }
 }

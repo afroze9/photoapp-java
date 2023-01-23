@@ -1,6 +1,9 @@
 server:
   port: ${PORT:0}
 
+token:
+  secret: cUQNOIVMSBIR0o1AgypHXGAPICAFIRmQbHwoVQUZjhs=
+
 spring:
   application:
     name: users-ws
