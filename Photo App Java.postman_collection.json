@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "bc024f20-ea6e-4ef9-9734-8ba0f737f742",
+		"_postman_id": "75494b43-969c-4c97-8406-ea1c55535b9e",
 		"name": "Photo App Java",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "22947257"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -199,6 +198,47 @@
 					"port": "8012",
 					"path": [
 						"encrypt"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Details",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8082/users/f96d9ee8-9115-413c-b036-f996119e9191",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"users",
+						"f96d9ee8-9115-413c-b036-f996119e9191"
 					]
 				}
 			},

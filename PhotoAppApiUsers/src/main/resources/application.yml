@@ -52,6 +52,9 @@ management:
     web:
       exposure:
         include: beans,health,httptrace,info,metrics
+  info:
+    env:
+      enabled: true
 
 logging:
   level:
@@ -59,3 +62,14 @@ logging:
       springframework:
         web: DEBUG
         security: DEBUG
+    com:
+      afroze:
+        photoapp:
+          api:
+            users:
+              data:
+                AlbumsServiceClient: DEBUG
+
+info:
+  application:
+    name: ${spring.application.name}

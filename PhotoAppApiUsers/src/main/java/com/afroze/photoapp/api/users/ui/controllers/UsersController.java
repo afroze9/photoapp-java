@@ -6,6 +6,7 @@ import com.afroze.photoapp.api.users.shared.UserDto;
 import com.afroze.photoapp.api.users.ui.model.AuthenticationRequestModel;
 import com.afroze.photoapp.api.users.ui.model.CreateUserRequestModel;
 import com.afroze.photoapp.api.users.ui.model.CreateUserResponseModel;
+import com.afroze.photoapp.api.users.ui.model.UserResponseModel;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -67,5 +68,12 @@ public class UsersController {
         }
 
         return ResponseEntity.badRequest().body("Some error :(");
+    }
+
+    @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<UserResponseModel> getUser(@PathVariable("userId") String userId) {
+        UserDto userDto = usersService.getUserByUserId(userId);
+        UserResponseModel responseModel = new ModelMapper().map(userDto, UserResponseModel.class);
+        return ResponseEntity.status(HttpStatus.OK).body(responseModel);
     }
 }
