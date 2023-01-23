@@ -9,6 +9,7 @@ import com.afroze.photoapp.api.users.ui.model.CreateUserResponseModel;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,13 +23,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UsersController {
 
-    private final Environment env;
+    private final Environment environment;
     private final UsersService usersService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    public UsersController(Environment env, UsersService usersService, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-        this.env = env;
+    @Autowired
+    public UsersController(Environment environment, UsersService usersService, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+        this.environment = environment;
         this.usersService = usersService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
@@ -36,7 +38,7 @@ public class UsersController {
 
     @GetMapping("/status/check")
     public String status() {
-        return "Working on port: " + env.getProperty("local.server.port");
+        return "Working on port: " + environment.getProperty("local.server.port") + ", with expiry: " + environment.getProperty("token.expiry");
     }
 
     @PostMapping(

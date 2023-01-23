@@ -49,9 +49,10 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-
+        String configExpiry = environment.getProperty("token.expiry");
+        int expiry = configExpiry == null ? 36000000 : Integer.parseInt(configExpiry);
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + expiry))
                 .signWith(SignatureAlgorithm.HS256, environment.getProperty("token.secret")).compact();
     }
 

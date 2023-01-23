@@ -1,0 +1,30 @@
+server:
+  port: 8012
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:///C:/tools/photoapp-java-config/
+        git:
+          uri: https://github.com/afroze9/photoapp-java-config
+          username: afroze9
+          password: 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
+          clone-on-start: true
+          default-label: main
+  profiles:
+    active: native
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: developer
+    password: dev123
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh

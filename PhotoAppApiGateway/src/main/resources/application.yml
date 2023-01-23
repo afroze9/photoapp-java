@@ -8,6 +8,10 @@ spring:
   application:
     name: api-gateway
 
+  config:
+    import: optional:configserver:http://localhost:8012
+    name: config-server
+
   cloud:
     gateway:
       discovery:
@@ -62,6 +66,11 @@ spring:
             - RemoveRequestHeader=Cookie
             - AuthorizationHeaderFilter
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: developer
+    password: dev123
 
 eureka:
   client:

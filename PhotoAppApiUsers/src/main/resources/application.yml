@@ -3,10 +3,17 @@ server:
 
 token:
   secret: cUQNOIVMSBIR0o1AgypHXGAPICAFIRmQbHwoVQUZjhs=
+  expiry: 36000001
 
 spring:
   application:
     name: users-ws
+  config:
+    import: optional:configserver:http://localhost:8012
+    name: config-server
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
   devtools:
     restart:
       enabled: true
@@ -15,11 +22,13 @@ spring:
       enabled: true
       settings:
         web-allow-others: true
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: developer
+    password: dev123
 
 eureka:
   client:

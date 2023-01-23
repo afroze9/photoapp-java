@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: discoveryservice
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: developer
+    password: dev123
 
 eureka:
   client:
