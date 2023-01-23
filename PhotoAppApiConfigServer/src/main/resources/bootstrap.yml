@@ -1,0 +1,5 @@
+encrypt:
+  key-store:
+    location: file:///C:\tools\photoapp-java-config/photoappkey.jks
+    password: 1q2w3e
+    alias: photoappkey
