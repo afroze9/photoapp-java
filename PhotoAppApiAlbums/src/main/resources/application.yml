@@ -4,6 +4,14 @@ server:
 spring:
   application:
     name: albums-ws
+  config:
+    import: optional:configserver:http://localhost:8012
+    name: albums-ws
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: developer
+    password: dev123
 
 eureka:
   client:

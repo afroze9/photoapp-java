@@ -9,6 +9,13 @@ spring:
     port: 5672
     username: developer
     password: dev123
+  security:
+    user:
+      name: test
+      password: test
+  config:
+    name: discoveryservice
+    import: optional:configserver:http://localhost:8012
 
 eureka:
   client:

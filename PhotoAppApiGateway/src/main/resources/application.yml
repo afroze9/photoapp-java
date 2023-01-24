@@ -10,7 +10,7 @@ spring:
 
   config:
     import: optional:configserver:http://localhost:8012
-    name: config-server
+    name: api-gateway
 
   cloud:
     gateway:
