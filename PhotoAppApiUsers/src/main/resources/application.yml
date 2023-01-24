@@ -81,6 +81,8 @@ logging:
             users:
               data:
                 AlbumsServiceClient: DEBUG
+  file:
+    name: C:\tools\photoapp-java-logs\users-ws.log
 
 resilience4j:
   circuitbreaker:
