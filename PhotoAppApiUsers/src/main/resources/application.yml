@@ -13,8 +13,8 @@ spring:
     name: users-ws
   datasource:
     url: jdbc:postgresql://localhost:5432/photo_app
-    username: developer
-    password: dev123
+    username: developer1
+    password: dev1234
   devtools:
     restart:
       enabled: true
@@ -48,12 +48,21 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 management:
+  endpoint:
+    health:
+      show-details: always
+      enabled: true
   endpoints:
     web:
       exposure:
-        include: beans,health,httptrace,info,metrics
+        include: beans,health,httptrace,info,metrics,circuitbreakers,circuitbreakerevents
   info:
     env:
+      enabled: true
+  health:
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
       enabled: true
 
 logging:
@@ -69,6 +78,27 @@ logging:
             users:
               data:
                 AlbumsServiceClient: DEBUG
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      albums-ws:
+        failure-rate-threshold: 50
+        automatic-transition-from-open-to-half-open-enabled: true
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 2
+        minimum-number-of-calls: 1
+        event-consumer-buffer-size: 10
+        wait-duration-in-open-state: 10s
+    circuit-breaker-aspect-order: 1
+  retry:
+    instances:
+      albums-ws:
+        max-attempts: 3
+        wait-duration: 1s
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 5
+    retry-aspect-order: 2
 
 info:
   application:

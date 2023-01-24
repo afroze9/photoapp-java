@@ -46,13 +46,22 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
 
+#        - id: users-actuator
+#          uri: lb://users-ws
+#          predicates:
+#            - Path=/actuator/**
+#            - Method=GET
+#          filters:
+#            - RemoveRequestHeader=Cookie
+
         - id: users-actuator
           uri: lb://users-ws
           predicates:
-            - Path=/actuator/**
+            - Path=/users-ws/actuator/**
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookie
+            - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
 
         - id: users-ops
           uri: lb://users-ws
