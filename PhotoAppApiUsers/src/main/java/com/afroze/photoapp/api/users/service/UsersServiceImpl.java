@@ -7,6 +7,8 @@ import com.afroze.photoapp.api.users.shared.UserDto;
 import com.afroze.photoapp.api.users.ui.model.AlbumResponseModel;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,11 +27,14 @@ public class UsersServiceImpl implements UsersService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AlbumsServiceClient albumsServiceClient;
 
+    private final Logger logger;
+
     @Autowired
     public UsersServiceImpl(UsersRepository usersRepository, BCryptPasswordEncoder bCryptPasswordEncoder, AlbumsServiceClient albumsServiceClient) {
         this.usersRepository = usersRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.albumsServiceClient = albumsServiceClient;
+        this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
     @Override
@@ -55,6 +60,7 @@ public class UsersServiceImpl implements UsersService {
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
+        logger.info("Before calling albums");
         List<AlbumResponseModel> albumsList = albumsServiceClient.getAlbums(userId);
         userDto.setAlbums(albumsList);
 
