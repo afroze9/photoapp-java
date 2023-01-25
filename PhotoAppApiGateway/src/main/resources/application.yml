@@ -46,14 +46,6 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
 
-#        - id: users-actuator
-#          uri: lb://users-ws
-#          predicates:
-#            - Path=/actuator/**
-#            - Method=GET
-#          filters:
-#            - RemoveRequestHeader=Cookie
-
         - id: users-actuator
           uri: lb://users-ws
           predicates:
@@ -71,7 +63,7 @@ spring:
             - Header=Authorization, Bearer (.*)
           filters:
             - RemoveRequestHeader=Cookie
-            - AuthorizationHeaderFilter
+#            - AuthorizationHeaderFilter
 
         - id: actuator
           uri: lb://actuator

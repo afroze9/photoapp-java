@@ -36,8 +36,8 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: developer
-    password: dev123
+    username: guest
+    password: guest
 
 eureka:
   client:
@@ -72,8 +72,8 @@ logging:
   level:
     org:
       springframework:
-        web: DEBUG
-        security: DEBUG
+        web: TRACE
+        security: TRACE
     com:
       afroze:
         photoapp:

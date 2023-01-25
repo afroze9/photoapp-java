@@ -7,6 +7,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,5 +34,26 @@ public class PhotoAppApiUsersApplication {
     @Bean
     Logger.Level feignLoggerLevel() {
         return Logger.Level.FULL;
+    }
+
+    @Bean
+    @Profile("production")
+    public String createProductionBean() {
+        System.out.println("Production Bean");
+        return "Production Bean";
+    }
+
+    @Bean
+    @Profile("!production")
+    public String createNonProductionBean() {
+        System.out.println("Non Production Bean");
+        return "Non Production Bean";
+    }
+
+    @Bean
+    @Profile("default")
+    public String createDevelopmentBean() {
+        System.out.println("Development Bean");
+        return "Development Bean";
     }
 }
